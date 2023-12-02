@@ -13,8 +13,12 @@ class VoteStrategy(ABC):
 # Concrete strategy for upvoting
 class UpvoteStrategy(VoteStrategy):
     def vote(self, review, staff):
-        if staff in review.staffUpvoters:
-            return review.upvotes
+        if staff in review.staffUpvoters: # if they already voted, remove the vote
+            review.upvotes -= 1
+            review.staffUpvoters.remove(staff)
+            db.session.add(review)
+            db.session.commit()
+            # return review.upvotes
         else:
             if staff not in review.staffUpvoters:
                 review.upvotes += 1
@@ -51,7 +55,11 @@ class UpvoteStrategy(VoteStrategy):
 class DownvoteStrategy(VoteStrategy):
     def vote(self, review, staff):
         if staff in review.staffDownvoters:
-            return review.downvotes
+            review.downvotes -= 1
+            review.staffDownvoters.remove(staff)
+            db.session.add(review)
+            db.session.commit()
+            # return review.downvotes
         else:
             if staff not in review.staffDownvoters:
                 review.downvotes += 1

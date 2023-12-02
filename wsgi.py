@@ -20,7 +20,6 @@ from App.controllers import (
     get_all_reviews_json,
     create_review,
     get_staff,
-    upvoteReview,
     set_vote_strategy,
     vote )
 from App.views import (generate_random_contact_number)
@@ -159,8 +158,8 @@ def create_review_command(staffid, studentid, is_positive, comment):
     create_review(staffid, studentid, is_positive, comment)
     print('Review created!')
 
-# cli command to test upvoting
-@review_cli.command("upvote", help="upvotes a review object in the database")
+# cli command to test voting
+@review_cli.command("vote", help="votes on a review object in the database")
 @click.argument("reviewid", default="1")
 @click.argument("staffid", default = "2")
 @click.argument("strategy", default="upvote")
@@ -175,7 +174,7 @@ def upvote_review_command(reviewid, staffid, strategy):
     vote(reviewid, staff)
     
 
-    print("Review upvoted!")
+    print("Review voted!")
 
 app.cli.add_command(review_cli)
 '''
