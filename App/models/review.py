@@ -4,7 +4,7 @@ from datetime import datetime
 from .karma import Karma
 
 # from abc import ABC, abstractmethod
-from .vote_strategies import UpvoteStrategy, DownvoteStrategy
+from .vote_strategies import VoteStrategy, UpvoteStrategy, DownvoteStrategy
 
 # Define the association table for staff upvotes on reviews
 review_staff_upvoters = db.Table(
@@ -73,7 +73,7 @@ class Review(db.Model):
     return self.ID
 
 # Method to set the voting strategy (can be called to switch between upvoting and downvoting)
-  def set_vote_strategy(self, strategy):
+  def set_vote_strategy(self, strategy:VoteStrategy):
     self.vote_strategy = strategy
 
 

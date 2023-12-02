@@ -20,7 +20,9 @@ from App.controllers import (
     get_all_reviews_json,
     create_review,
     get_staff,
-    upvoteReview )
+    upvoteReview,
+    set_vote_strategy,
+    vote )
 from App.views import (generate_random_contact_number)
 
 # This commands file allow you to create convenient CLI commands for testing controllers
@@ -161,10 +163,18 @@ def create_review_command(staffid, studentid, is_positive, comment):
 @review_cli.command("upvote", help="upvotes a review object in the database")
 @click.argument("reviewid", default="1")
 @click.argument("staffid", default = "2")
-def upvote_review_command(reviewid, staffid):
+@click.argument("strategy", default="upvote")
+def upvote_review_command(reviewid, staffid, strategy):
     # print(get_staff(staffid).to_json())
+
+    # staff = get_staff(staffid)
+    # upvoteReview(reviewid, staff)
+
     staff = get_staff(staffid)
-    upvoteReview(reviewid, staff)
+    set_vote_strategy(reviewid, strategy)
+    vote(reviewid, staff)
+    
+
     print("Review upvoted!")
 
 app.cli.add_command(review_cli)

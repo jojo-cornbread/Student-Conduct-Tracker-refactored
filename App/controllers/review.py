@@ -1,5 +1,7 @@
-from App.models import Review, Karma, Student
+from App.models import Review, Karma, Student, VoteStrategy, UpvoteStrategy, DownvoteStrategy
 from App.database import db
+
+# from .vote_strategies import UpvoteStrategy, DownvoteStrategy
 
 def get_reviews(): 
     return db.session.query(Review).all()
@@ -38,6 +40,24 @@ def delete_review(review, staff):
         return True
     return None
 
+# design pattern implementation
+def set_vote_strategy(reviewID, strategy):
+    review = get_review(reviewID)
+
+    if strategy.lower() == "upvote":
+        strategy = UpvoteStrategy()
+    elif strategy.lower() == "downvote":
+        strategy = DownvoteStrategy()
+
+    review.set_vote_strategy(strategy)
+
+    if strategy:
+        return strategy
+    return None
+    
+def vote(reviewID, staff):
+    review = get_review(reviewID)
+    return review.vote(staff)
 
 def downvoteReview(reviewID, staff):
     review = db.session.query(Review).get(reviewID)

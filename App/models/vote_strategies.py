@@ -29,7 +29,8 @@ class UpvoteStrategy(VoteStrategy):
 
             # ... (rest of your code for updating Karma)
             # Retrieve the associated Student object using studentID
-            student = Student.query.get(self.studentID)
+            # student = Student.query.get(self.studentID)
+            student = db.session.query(Student).get(review.studentID)
 
             #  check if the student has a karma record (KarmaID) and create a new Karma record for them if not
             if student.karmaID is None:
@@ -65,7 +66,8 @@ class DownvoteStrategy(VoteStrategy):
 
             # ... (rest of your code for updating Karma)
             # Retrieve the associated Student object using studentID
-            student = Student.query.get(self.studentID)
+            # student = Student.query.get(self.studentID)
+            student = db.session.query(Student).get(review.studentID)
 
             #  check if the student has a karma record (KarmaID) and create a new Karma record for them if not
             if student.karmaID is None:
