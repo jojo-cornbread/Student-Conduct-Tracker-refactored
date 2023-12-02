@@ -3,6 +3,9 @@ from .student import Student
 from datetime import datetime
 from .karma import Karma
 
+# from abc import ABC, abstractmethod
+from .vote_strategies import UpvoteStrategy, DownvoteStrategy
+
 # Define the association table for staff upvotes on reviews
 review_staff_upvoters = db.Table(
     'review_staff_upvoters',
@@ -52,6 +55,9 @@ class Review(db.Model):
   created = db.Column(db.DateTime, default=datetime.utcnow)
   comment = db.Column(db.String(400), nullable=False)
 
+  # Strategy instance for voting (initially set to UpvoteStrategy)
+  vote_strategy = UpvoteStrategy()
+
   # initialize the review. when it is created the date is automatically gotten and votes are at 0
   def __init__(self, reviewer, student, isPositive, comment):
     self.reviewerID = reviewer.ID
@@ -65,6 +71,15 @@ class Review(db.Model):
 
   def get_id(self):
     return self.ID
+
+# Method to set the voting strategy (can be called to switch between upvoting and downvoting)
+  def set_vote_strategy(self, strategy):
+    self.vote_strategy = strategy
+
+
+# Method to perform the vote using the current strategy
+  def vote(self, staff):
+    return self.vote_strategy.vote(self, staff)
 
 
 #allows the comment and whether the review is positive to be edited if the staff member is the creator of the review, returns none if not
@@ -172,3 +187,84 @@ class Review(db.Model):
         "downvotes": self.downvotes,
         "comment": self.comment
     }
+
+# TEMP CODE FOR IMPLEMENTING THE STRATEGY DESIGN PATTERN
+# MOVE TO SEPERATE MODEL FILES AFTER
+
+# # Define the strategy interface
+# class VoteStrategy(ABC):
+#     @abstractmethod
+#     def vote(self, review, staff):
+#         pass
+
+# # Concrete strategy for upvoting
+# class UpvoteStrategy(VoteStrategy):
+#     def vote(self, review, staff):
+#         if staff in review.staffUpvoters:
+#             return review.upvotes
+#         else:
+#             if staff not in review.staffUpvoters:
+#                 review.upvotes += 1
+#                 review.staffUpvoters.append(staff)
+
+#                 if staff in review.staffDownvoters:
+#                     review.downvotes -= 1
+#                     review.staffDownvoters.remove(staff)
+
+#             db.session.add(review)
+#             db.session.commit()
+
+#             # ... (rest of your code for updating Karma)
+#             # Retrieve the associated Student object using studentID
+#             student = Student.query.get(self.studentID)
+
+#             #  check if the student has a karma record (KarmaID) and create a new Karma record for them if not
+#             if student.karmaID is None:
+#               karma = Karma(score=0.0, rank=-99)
+#               db.session.add(karma) # Add the Karma record to the session
+#               db.session.flush() # Ensure the KArma record gets an ID
+#               student.karmaID = karma.karmaID # Set the student's KArmaID to the new KArma record's ID
+
+#               # Update Karma for the student
+#               student_karma = Karma.query.get(student.karmaID)
+#               student_karma.calculateScore(student)
+#               student_karma.updateRank()
+#               db.session.commit()
+
+#         return review.upvotes
+
+# # Concrete strategy for downvoting
+# class DownvoteStrategy(VoteStrategy):
+#     def vote(self, review, staff):
+#         if staff in review.staffDownvoters:
+#             return review.downvotes
+#         else:
+#             if staff not in review.staffDownvoters:
+#                 review.downvotes += 1
+#                 review.staffDownvoters.append(staff)
+
+#                 if staff in review.staffUpvoters:
+#                     review.upvotes -= 1
+#                     review.staffUpvoters.remove(staff)
+
+#             db.session.add(review)
+#             db.session.commit()
+
+#             # ... (rest of your code for updating Karma)
+#             # Retrieve the associated Student object using studentID
+#             student = Student.query.get(self.studentID)
+
+#             #  check if the student has a karma record (KarmaID) and create a new Karma record for them if not
+#             if student.karmaID is None:
+#               karma = Karma(score=0.0, rank=-99)
+#               db.session.add(karma) # Add the Karma record to the session
+#               db.session.flush() # Ensure the KArma record gets an ID
+#               student.karmaID = karma.karmaID # Set the student's KArmaID to the new KArma record's ID
+
+#               # Update Karma for the student
+#               student_karma = Karma.query.get(student.karmaID)
+#               student_karma.calculateScore(student)
+#               student_karma.updateRank()
+#               db.session.commit()
+
+#         return review.downvotes

@@ -4,6 +4,13 @@ from App.database import db
 def get_reviews(): 
     return db.session.query(Review).all()
 
+def get_all_reviews_json():
+    reviews = get_reviews()
+    if not reviews:
+        return []
+    reviews = [review.to_json() for review in reviews]
+    return reviews
+
 def get_reviews_for_student(studentID):
     return db.session.query(Review).filter_by(studentID=studentID).all()
 
@@ -85,6 +92,8 @@ def upvoteReview(reviewID, staff):
 
         db.session.add(review)
         db.session.commit()
+
+        # work out and update the karma ranking
         # Retrieve the associated Student object using studentID
         student = db.session.query(Student).get(review.studentID)
 
