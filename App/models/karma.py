@@ -8,6 +8,9 @@ class Karma(db.Model):
   score = db.Column(db.Float, nullable=False, default=0.0)
   rank = db.Column(db.Integer, nullable=False, default=-99)
 
+  # set up FK relationship with student
+  studentID = db.Column(db.String(10), db.ForeignKey('student.ID'))
+
   # Foreign key to student
   # student_id = db.Column(db.Integer, db.ForeignKey('student.ID'))
 
