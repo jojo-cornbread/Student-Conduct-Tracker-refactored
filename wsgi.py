@@ -21,7 +21,13 @@ from App.controllers import (
     create_review,
     get_staff,
     set_vote_strategy,
-    vote )
+    vote,
+    get_admin,
+    search_students_searchTerm,
+    update_student,
+    get_student,
+    get_student_rankings,
+    get_reviews_for_student )
 from App.views import (generate_random_contact_number)
 
 # This commands file allow you to create convenient CLI commands for testing controllers
@@ -108,6 +114,20 @@ app.cli.add_command(user_cli) # add the group to the cli
 # staff commands
 staff_cli = AppGroup('staff', help='staff object commands')
 
+# create staff command
+@staff_cli.command('create', help='creates a staff object in database')
+@click.argument('adminid', default='A1')
+@click.argument('firstname', default='fname')
+@click.argument('lastname', default='lname')
+@click.argument('password', default='password123')
+@click.argument('staffid', default='60')
+@click.argument('email', default='email@gmail.com')
+@click.argument('teachingexperience', default='10')
+def create_staff_command(adminid, firstname, lastname, password, staffid, email, teachingexperience):
+    admin = get_admin(adminid)
+    staff = create_staff(admin, firstname, lastname, password, staffid, email, teachingexperience)
+    print(staff, ' created')
+
 @staff_cli.command("list", help='lists staff object in database')
 @click.argument("format", default="string")
 def list_staff_command(format):
@@ -121,7 +141,52 @@ app.cli.add_command(staff_cli)
 # student commands
 student_cli = AppGroup('student', help="student object commands")
 
-# @student_cli("create", help="creates a student")
+# command to create students
+@student_cli.command('create', help='creates a student object in the database')
+@click.argument('adminid', default='A1')
+@click.argument('studentid', default='150')
+@click.argument('firstname', default='fname')
+@click.argument('lastname', default='lname')
+@click.argument('contact', default='123-4567')
+@click.argument('studenttype', default='Full-time')
+@click.argument('yearofstudy', default='1')
+def create_student_command(adminid, studentid, firstname, lastname, contact, studenttype, yearofstudy):
+    admin = get_admin(adminid)
+    student = create_student(admin, studentid, firstname, lastname, contact, studenttype, yearofstudy)
+    print(student, ' created')
+
+# search student command
+@student_cli.command('search', help='searches for a student object in the database')
+@click.argument('staffid', default='2')
+@click.argument('searchterm', default='50')
+def search_student_command(staffid, searchterm):
+    staff = get_staff(staffid)
+
+    if staff is None:
+        print('Invalid staffID')
+    else:
+        student = search_students_searchTerm(staff, searchterm)
+        print(student)
+
+# update students
+@student_cli.command('update', help='update a student object in the database')
+@click.argument('studentid', default='55')
+@click.argument('firstname', default='fname')
+@click.argument('lastname', default='lname')
+@click.argument('contact', default='123-4567')
+@click.argument('studenttype', default='Full-time')
+@click.argument('yearofstudy', default='1')
+def update_student_command(studentid, firstname, lastname, contact, studenttype, yearofstudy):
+    student = get_student(studentid)
+    update_student(student, firstname, lastname, contact, studenttype, yearofstudy)
+    print('student updated!')
+
+# get student rankings command
+@student_cli.command('rankings', help='get all student rankings')
+@click.argument('staffid', default='2')
+def get_student_rankings_command(staffid):
+    staff = get_staff(staffid)
+    print(get_student_rankings(staff))
 
 @student_cli.command("list", help="Lists students in the database")
 @click.argument("format", default="string")
@@ -134,8 +199,6 @@ def list_students_command(format):
 # @student_cli.command("get", help="Get all information about a specific student")
 
 app.cli.add_command(student_cli)
-
-# add in cli commands for reviews and karma
 
 # review commands
 review_cli = AppGroup('review', help="review object commands")
@@ -170,13 +233,31 @@ def upvote_review_command(reviewid, staffid, strategy):
     # upvoteReview(reviewid, staff)
 
     staff = get_staff(staffid)
-    set_vote_strategy(reviewid, strategy)
+    set_vote_strategy(reviewid, strategy)# get student rankings command
+def get_student_rankings_command():
+    get_student_rankings(staff)
     vote(reviewid, staff)
-    
-
     print("Review voted!")
 
+
+# get reviews for a student command
+@review_cli.command('student', help='get all the reviews for a student object')
+@click.argument('studentid', default='50')
+@click.argument('format', default='string')
+def get_reviews_for_student_command(studentid, format):
+    reviews = get_reviews_for_student(studentid)
+
+    if format == 'string':
+        print(reviews)
+    else:
+        for review in reviews:
+            print(review.to_json())
+
+
+
 app.cli.add_command(review_cli)
+
+
 '''
 Test Commands
 '''
