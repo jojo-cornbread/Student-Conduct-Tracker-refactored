@@ -20,8 +20,8 @@ from App.controllers import (
     get_review, 
     get_reviews_for_student, 
     get_reviews_by_staff, 
-    upvoteReview, 
-    downvoteReview,
+    # upvoteReview, 
+    # downvoteReview,
     get_student_rankings, 
     search_students_searchTerm,
     set_vote_strategy,
@@ -253,8 +253,10 @@ class UsersIntegrationTests(unittest.TestCase):
             for review in reviews: 
                 for voter in range (2000, 2010):
                     if get_staff(voter).ID != review.reviewerID: 
-                        assert random.choice([upvoteReview(review.ID, get_staff(voter)), downvoteReview(review.ID, get_staff(voter))])
+                        random.choice([set_vote_strategy(review.ID, "upvote"), set_vote_strategy(review.ID, "downvote")])
+                        vote(review.ID, get_staff(voter))
         assert get_student_rankings(get_staff(2000)) is not None
 
     def test_get_karma_score_by_id(self): 
         assert get_karma_by_id(1).karmaID == 1
+

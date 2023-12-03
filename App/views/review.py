@@ -9,11 +9,13 @@ from App.controllers.review import (
     get_reviews_by_staff,
     edit_review,
     delete_review,
-    upvoteReview,
-    downvoteReview,
+    # upvoteReview,
+    # downvoteReview,
     get_reviews,
     get_reviews_for_student, 
-    get_review
+    get_review,
+    set_vote_strategy,
+    vote
 )
 
 # Create a Blueprint for Review views
@@ -35,6 +37,8 @@ def view_review(review_id):
         return 'Review does not exist', 404
 
 #Route to upvote review 
+# might be able to merge both upvote and downvote routes by making the /upvote intoa variable
+# and then using that variable (either upvote or downvote) as the strategy in set strategy method
 @review_views.route('/review/<int:review_id>/upvote', methods=['POST'])
 @jwt_required()
 def upvote (review_id):
@@ -46,7 +50,10 @@ def upvote (review_id):
         staff = get_staff(jwt_current_user.ID)
         if staff:
             current = review.upvotes
-            new_votes= upvoteReview(review_id, staff)
+
+            set_vote_strategy(review_id, "upvote")
+            new_votes= vote(review_id, staff)
+
             if new_votes == current: 
                return jsonify(review.to_json(), 'Review Already Upvoted'), 201 
             else:
@@ -68,7 +75,9 @@ def downvote (review_id):
         staff = get_staff(jwt_current_user.ID)
         if staff:
             current = review.downvotes
-            new_votes= downvoteReview(review_id, staff)
+
+            set_vote_strategy(review_id, "downvote")
+            new_votes= vote(review_id, staff)
             if new_votes == current: 
                return jsonify(review.to_json(), 'Review Already Downvoted'), 201 
             else:

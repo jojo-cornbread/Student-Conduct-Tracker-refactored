@@ -8,6 +8,12 @@ class Karma(db.Model):
   score = db.Column(db.Float, nullable=False, default=0.0)
   rank = db.Column(db.Integer, nullable=False, default=-99)
 
+  # Foreign key to student
+  # student_id = db.Column(db.Integer, db.ForeignKey('student.ID'))
+
+  #   # Relationship to access the associated student object
+  # student = db.relationship('Student', back_populates='karma', foreign_keys=[student_id])
+
   def __init__(self, score=0.0, rank=-99):
     self.score = score
     self.rank = rank
