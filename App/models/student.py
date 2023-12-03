@@ -18,6 +18,8 @@ class Student(db.Model):
 
 	karmaID = db.Column(db.Integer, db.ForeignKey('karma.karmaID'))
 
+	karma = db.relationship('Karma', backref='student', lazy='joined', foreign_keys=[karmaID])
+
 	# karma = db.relationship('Karma', backref='student', lazy='joined')
 	# karma = db.relationship('Karma', back_populates='student', foreign_keys=[karmaID])
 
