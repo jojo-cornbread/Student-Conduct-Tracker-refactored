@@ -23,7 +23,9 @@ from App.controllers import (
     upvoteReview, 
     downvoteReview,
     get_student_rankings, 
-    search_students_searchTerm
+    search_students_searchTerm,
+    set_vote_strategy,
+    vote
 )
 
 
@@ -210,9 +212,14 @@ class UsersIntegrationTests(unittest.TestCase):
         student = create_student(admin, "9999", "Kil", "Me", "void@school.com", "Full-Time", 4)
         review = create_review(staff_1.ID, student.ID, True, "Do i even need to review this student")
         assert admin and staff_1 and staff_2 and student and review
+
+        strategy = "upvote"
+        set_vote_strategy(review.ID, strategy)
+
         old_upVotes = review.upvotes
         old_downvotes = review.downvotes
-        assert old_upVotes + 1 == upvoteReview(review.ID, staff_2) 
+
+        assert old_upVotes + 1 == vote(review.ID, staff_1)
         assert old_downvotes == review.downvotes
 
     def test_downvote(self):
@@ -222,10 +229,15 @@ class UsersIntegrationTests(unittest.TestCase):
         student = create_student(admin, "9998", "Still", "Here", "null@school.com", "Full-Time", 5)
         review = create_review(staff_1.ID, student.ID, False, "Do i even need to review this horrible thing called a student")
         assert admin and staff_1 and staff_2 and student and review
+
+        strategy = "downvote"
+        set_vote_strategy(review.ID, strategy)
+
         old_upVotes = review.upvotes
         old_downvotes = review.downvotes
+
         assert old_upVotes == review.upvotes
-        assert old_downvotes + 1 == downvoteReview(review.ID, staff_2) 
+        assert old_downvotes + 1 == vote(review.ID, staff_2) 
 
     def test_get_rankings(self): 
         admin = create_user("Brown", "brownlast", "brownpass")

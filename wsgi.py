@@ -233,9 +233,7 @@ def upvote_review_command(reviewid, staffid, strategy):
     # upvoteReview(reviewid, staff)
 
     staff = get_staff(staffid)
-    set_vote_strategy(reviewid, strategy)# get student rankings command
-def get_student_rankings_command():
-    get_student_rankings(staff)
+    set_vote_strategy(reviewid, strategy)
     vote(reviewid, staff)
     print("Review voted!")
 
