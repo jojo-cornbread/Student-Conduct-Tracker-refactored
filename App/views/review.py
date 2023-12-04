@@ -52,16 +52,24 @@ def upvote (review_id):
             current = review.upvotes
 
             set_vote_strategy(review_id, "upvote")
-            new_votes= vote(review_id, staff)
+            new_vote = vote(review_id, staff)
 
-            if new_votes == current: 
-               return jsonify(review.to_json(), 'Review Already Upvoted'), 201 
+            if new_vote:
+                return jsonify(review.to_json(), 'Review Upvoted'), 200
             else:
                 return jsonify(review.to_json(), 'Review Upvoted'), 200
         else: 
-            return jsonify('Staff does not exist'), 404     
-    else: 
-        return'Review does not exist', 404
+            return jsonify('Staff does not exist'), 404
+    else:
+        return 'Review does not exist', 404
+    #         if new_votes == current: 
+    #            return jsonify(review.to_json(), 'Review Already Upvoted'), 201 
+    #         else:
+    #             return jsonify(review.to_json(), 'Review Upvoted'), 200
+    #     else: 
+    #         return jsonify('Staff does not exist'), 404     
+    # else: 
+    #     return'Review does not exist', 404
 
 #Route to downvote review 
 @review_views.route('/review/<int:review_id>/downvote', methods=['POST'])
@@ -74,18 +82,19 @@ def downvote (review_id):
     if review:
         staff = get_staff(jwt_current_user.ID)
         if staff:
-            current = review.downvotes
+            current = review.upvotes
 
             set_vote_strategy(review_id, "downvote")
-            new_votes= vote(review_id, staff)
-            if new_votes == current: 
-               return jsonify(review.to_json(), 'Review Already Downvoted'), 201 
+            new_vote = vote(review_id, staff)
+
+            if new_vote:
+                return jsonify(review.to_json(), 'Review Downvoted Successfully'), 200
             else:
-                return jsonify(review.to_json(), 'Review Downvoted Successfully'), 200 
+                return jsonify(review.to_json(), 'Review Downvoted Successfully'), 200
         else: 
-            return jsonify(get_review(review_id).to_json(), 'Staff does not exist'), 404
-    else: 
-        return'Review does not exist', 404
+            return jsonify('Staff does not exist'), 404
+    else:
+        return 'Review does not exist', 404
 
 # Route to get reviews by student ID
 @review_views.route("/student/<string:student_id>/reviews", methods=["GET"])

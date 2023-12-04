@@ -44,7 +44,7 @@ def create_student_action():
 
   #validate admin user
     if jwt_current_user and isinstance(jwt_current_user, Admin):
-      student = create_student(jwt_current_user, data['studentID'],firstname=data['firstname'], lastname=data['lastname'], password=data['password'], contact=data['contact'], studentType=student_type, yearofStudy=data['yearOfStudy'])
+      student = create_student(jwt_current_user, data['studentID'],firstname=data['firstname'], lastname=data['lastname'], contact=data['contact'], studentType=student_type, yearofStudy=data['yearOfStudy'])
 
       if student:
         return jsonify({"message": f"Student created with ID {student.ID}"}, student.to_json()), 201
@@ -134,7 +134,7 @@ def update_student_action(id):
     if student_type not in ('Full-Time', 'Part-Time', 'Evening'):
         return jsonify({"message": f"invalid student type ({data['studentType']}). Types: Full-Time, Part-Time and Evening"}), 400 
   
-    updated= update_student(student, firstname, lastname, password, contact, student_type, yearOfStudy)
+    updated= update_student(student, firstname, lastname, contact, student_type, yearOfStudy)
     if updated:
       return jsonify(student.to_json(), "Student information updated successfully"), 200
     else:

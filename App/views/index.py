@@ -1,7 +1,7 @@
 import random
 from flask import Blueprint, render_template, jsonify
 from App.models import db
-from App.controllers import create_user, create_staff, create_student
+from App.controllers import create_user, create_staff, create_student, create_review
 import randomname
 
 from App.models.admin import Admin
@@ -39,12 +39,15 @@ def init():
       student= create_student(admin, str(ID),
           randomname.get_name(), 
           randomname.get_name(), 
-          randomname.get_name(),
+        #   randomname.get_name(),
           contact,
           random.choice(['Full-Time','Part-Time', 'Evening']),
           str(random.randint(1, 8))
       )
       db.session.add(student)
       db.session.commit()
+
+  # review = create_review("2", "50", True, "Good")
+
 
   return jsonify({'message': 'Database initialized'}),201
