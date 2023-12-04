@@ -10,6 +10,11 @@ class Karma(db.Model):
 
   # set up FK relationship with student
   studentID = db.Column(db.String(10), db.ForeignKey('student.ID', name='fk_studentID', use_alter=True), nullable=True)
+  student = db.relationship('Student', backref='student', lazy='joined', foreign_keys=[studentID])
+  # reviews = db.relationship('Review', backref='student', lazy='joined')
+
+
+  # student = db.relationship('Student', back_populates='karma', uselist=False, foreign_keys=[studentID])
 
   # Foreign key to student
   # student_id = db.Column(db.Integer, db.ForeignKey('student.ID'))
