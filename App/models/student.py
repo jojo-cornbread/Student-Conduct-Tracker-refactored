@@ -16,7 +16,7 @@ class Student(db.Model):
 	
 	reviews = db.relationship('Review', backref='student', lazy='joined')
 
-	karmaID = db.Column(db.Integer, db.ForeignKey('karma.karmaID', use_alter=True))
+	karmaID = db.Column(db.Integer, db.ForeignKey('karma.karmaID'))
     
 	# karma = db.relationship('Karma', back_populates='student', uselist=False, foreign_keys=[karmaID], remote_side=[karmaID])
 
