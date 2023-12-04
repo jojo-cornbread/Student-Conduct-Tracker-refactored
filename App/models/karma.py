@@ -9,7 +9,7 @@ class Karma(db.Model):
   rank = db.Column(db.Integer, nullable=False, default=-99)
 
   # set up FK relationship with student
-  studentID = db.Column(db.String(10), db.ForeignKey('student.ID', use_alter=True, ondelete='CASCADE'))
+  studentID = db.Column(db.String(10), db.ForeignKey('student.ID', name='fk_studentID', use_alter=True, ondelete='CASCADE'))
   
 
   def __init__(self, score=0.0, rank=-99):
