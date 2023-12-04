@@ -1,12 +1,20 @@
-COMP3613 ASSIGNMENT 1 & 2
+COMP3613 PROJECT
 
-Group: CTRL-ALT-DELETE
+Group: KINETIC-KODERS
 
-Document: https://docs.google.com/document/d/1nBgYIHf5PcRCvPKZNv9UnSjubzX9cqX5FxpNLGNllAE/edit?usp=sharing 
+MEMBERS: - JOSIAH RAMBALLY 816032691
+         - ZANE ESPINOZA 816032716
+         - NAMRATA JAGANATH 816030364
 
-Postman Documentation: https://documenter.getpostman.com/view/30409872/2s9YJjSzQF  
+Document:  
 
-Deloyed link: https://student-conduct-tracker-api.onrender.com
+TRELLO BOARD:
+
+PRESENTATION VIDEO:
+
+POSTMAN DOCUMENTATION:  https://documenter.getpostman.com/view/25707087/2s9YeLXpNR
+
+DEPLOYED APP: (https://student-conduct-tracker-refactored.onrender.com)
 
 
 ---
